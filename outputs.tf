@@ -1,6 +1,6 @@
 output "dns" {
-  value = module.website.dns
+  value = var.dns
 }
 output "cloudfront_id" {
-  value = module.website.cloudfront_id
+  value = aws_cloudfront_distribution.cdn.id
 }
