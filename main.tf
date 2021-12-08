@@ -16,6 +16,14 @@ resource "aws_cloudfront_distribution" "cdn" {
       origin_protocol_policy = "http-only"
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
+    dynamic custom_header {
+      for_each = var.edge_lambdas_variables
+      content {
+        name  = "x-lambda-var-${replace(lower(custom_header.key), "_", "-")}"
+        value = custom_header.value
+      }
+    }
+
   }
 
   enabled             = true
@@ -47,6 +55,16 @@ resource "aws_cloudfront_distribution" "cdn" {
       event_type   = "viewer-request"
       function_arn = aws_cloudfront_function.redirect.arn
     }
+
+    dynamic "lambda_function_association" {
+      for_each = {for i,l in var.edge_lambdas: "lambda-${i}" => l}
+      content {
+        event_type   = lambda_function_association.value.event_type
+        lambda_arn   = lambda_function_association.value.lambda_arn
+        include_body = lambda_function_association.value.include_body
+      }
+    }
+
   }
 
   price_class = var.price_class
