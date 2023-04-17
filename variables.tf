@@ -31,3 +31,7 @@ variable "edge_lambdas_variables" {
   type    = map(string)
   default = {}
 }
+variable "fake_origin" {
+  type = string
+  default = "unknown-origin.com"
+}
