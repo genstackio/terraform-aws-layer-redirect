@@ -1,6 +1,6 @@
 resource "aws_cloudfront_function" "redirect" {
   name    = "${var.name}-redirect"
-  runtime = "cloudfront-js-1.0"
+  runtime = "cloudfront-js-2.0"
   comment = "redirect function"
   publish = true
   code    = var.function_code
